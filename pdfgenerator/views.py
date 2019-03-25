@@ -1,7 +1,11 @@
 from pdfgenerator.forms import UploadForm
-from django.shortcuts import redirect, render
 from pdfgenerator.helpers import convert_doc_to_pdf
-from pdfgenerator.models import Upload
+from pdfgenerator.models import Upload, Converted_Pdf
+from django.shortcuts import redirect, render, get_object_or_404, HttpResponse
+from django.core.files.storage import default_storage
+from wsgiref.util import FileWrapper
+from django.conf import settings
+
 import os
 
 
@@ -12,14 +16,21 @@ def model_form_upload(request):
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            filename = str(form.cleaned_data["upload"])
+            filename = str(form.cleaned_data["file"])
             conversion_queue.append(filename)
-            convert_doc_to_pdf(conversion_queue)
-            return redirect("home")
+            converted_pdf = convert_doc_to_pdf(conversion_queue)
+            download = Converted_Pdf.objects.create(file=converted_pdf)
+            return redirect("download", download.id)
     else:
         form = UploadForm()
     return render(request, html, {"form": form})
 
 
-def download_view(request):
-    pass
+def pdf_download(request, file_id):
+    html = "download.html"
+    file = get_object_or_404(Converted_Pdf, pk=file_id)
+    name = str(file).split("/")[-1]
+    path = f"{settings.MEDIA_URL}/pdfs/{name}"
+    print(path)
+    return render(request, html, {"path": path, "name": name})
+
