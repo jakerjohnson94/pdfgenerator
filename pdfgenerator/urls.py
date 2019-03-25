@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.urls import path
 from pdfgenerator.views import model_form_upload, pdf_download
-from pdfgenerator.models import Upload, Converted_Pdf
+from pdfgenerator.models import Upload, Converted_Pdf, Queue
 from django.conf import settings
 from django.conf.urls.static import static
 
 
 admin.site.register(Upload)
 admin.site.register(Converted_Pdf)
+admin.site.register(Queue)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -1,6 +1,8 @@
 pdfs/
 uploads/
-pdfgenerator/static
+media/
+pdfgenerator/static/
+pdfgenerator/media/
 .vscode
 # Created by https://www.gitignore.io/api/macos,python,django
 # Edit at https://www.gitignore.io/?templates=macos,python,django
