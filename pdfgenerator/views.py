@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render, get_object_or_404, HttpResponse
 from django.core.files.storage import default_storage
 from wsgiref.util import FileWrapper
 from django.conf import settings
-
+import time
 
 import os
 
@@ -22,10 +22,15 @@ def upload(request):
             name = name.rsplit("/")[-1]
             queue = Queue.objects.create(source=source_file)
 
-            # converted_pdf = Converted_Pdf.objects.filter(pk=)
-            return render(
-                request, html, {"message": f"Successfully Uploaded {filename}"}
-            )
+            new_pdf = None
+            while new_pdf == None:
+                try:
+                    new_pdf = Converted_Pdf.objects.get(source=source_file)
+                except Converted_Pdf.DoesNotExist:
+                    new_pdf = None
+                time.sleep(5)
+
+            return redirect("download", new_pdf.id)
 
     else:
         form = UploadForm()

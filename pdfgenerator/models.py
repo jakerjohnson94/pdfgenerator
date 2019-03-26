@@ -25,6 +25,9 @@ class Upload(models.Model):
 class Converted_Pdf(models.Model):
     file = models.FileField(storage=fs_pdf, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    source = models.ForeignKey(
+        Upload, verbose_name="Source File", on_delete=models.CASCADE
+    )
 
     def __str__(self):
         name = self.file.name.split("/")[-1]

@@ -14,13 +14,15 @@ class Command(BaseCommand):
                 "source__created"
             )
             for item in queued_items:
-                print(item)
+
                 filename = item.source.file.name
                 item.completed = True
                 item.save()
-                item.delete()
                 pdf_path = convert_doc_to_pdf(filename)
-                new_pdf = Converted_Pdf.objects.create(file=pdf_path)
+
+                new_pdf = Converted_Pdf.objects.create(
+                    file=pdf_path, source=item.source
+                )
 
                 self.stdout.write(self.style.SUCCESS(f"Converted {filename}"))
-        time.sleep(5)
+            time.sleep(5)
