@@ -124,10 +124,10 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "/pdfgenerator/static/"
 
 
-CRONJOBS = [
-    # ("* * * * *", "pdfgenerator.cron.convert"),
-    ("* * * * *", "django.core.management.call_command", ["convert"])
-]
+CRONJOBS = [("* * * * *", "django.core.management.call_command", ["convert"])]
 
 PANDOC_PATH = "/usr/local/bin/pandoc"
 PDF_ENGINE_PATH = "/Library/TeX/texbin/pdflatex"
+
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "uploads")
+PDF_PATH = os.path.join(MEDIA_ROOT, "pdfs")

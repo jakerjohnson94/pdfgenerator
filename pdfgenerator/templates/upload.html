@@ -1,13 +1,19 @@
 {% include 'head.html' %}
 {% block content %}
-  <div class="container center" style="padding-top: 5em">
-    <h4 class="title">  Convert Text File to PDF</h4>
+  <div class="container center" style="padding-top: 1em">
+
+    {% if message %}
+    <h4 class="red-text">{{message}}</h4>
+    {% endif %}
+
+    {% if form %}
+    <h2 class="title">Convert Text File to PDF</h2>
     <form class="form center" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
       <button class='btn red darken-2'type="submit">Upload</button>
     </form>
 
-
+    {% endif %}
   </div>
 {% endblock %}

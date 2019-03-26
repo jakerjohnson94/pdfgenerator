@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.shortcuts import get_object_or_404
 from pdfgenerator.models import Queue, Converted_Pdf
 from pdfgenerator.helpers import convert_doc_to_pdf
+import time
 
 
 class Command(BaseCommand):
@@ -13,10 +14,13 @@ class Command(BaseCommand):
                 "source__created"
             )
             for item in queued_items:
+                print(item)
                 filename = item.source.file.name
-                converted_pdf = convert_doc_to_pdf(filename)
                 item.completed = True
                 item.save()
-                Converted_Pdf.objects.create(file=converted_pdf)
                 item.delete()
+                pdf_path = convert_doc_to_pdf(filename)
+                new_pdf = Converted_Pdf.objects.create(file=pdf_path)
+
                 self.stdout.write(self.style.SUCCESS(f"Converted {filename}"))
+        time.sleep(5)
